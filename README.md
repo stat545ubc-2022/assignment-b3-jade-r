@@ -1,6 +1,6 @@
 # Video Game Prices Shiny App
 
-## Welcome to my shiny app! ::sparkles:: 
+## Welcome to my shiny app! :sparkles:
 
 I have chosen Option B for Assignment B-3 for STAT545B at UBC and created my own shiny app!
 
