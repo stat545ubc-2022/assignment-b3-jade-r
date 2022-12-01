@@ -2,30 +2,44 @@ library(shiny)
 library(DT)
 library(tidyverse)
 library(datateachr)
+library(DT)
+library(shinythemes)
 
 
-ui <- fluidPage(
-  h1("Video Game Prices"),
-  h2("Welcome to my shiny app!"),
-  h5("This app lets you examine the average original price of different video game genres published in different languages."),
-  h5("Go ahead and change the genre and/or the price range and see what happens!"),
+ui <- fluidPage(theme=shinytheme("spacelab"),
+  img(src = "game.png", height = 125, width = 250, align = "left"),
+  img(src = "game.png", height = 125, width = 250, align = "right"),
+  h1("Steam Games Video Game Data", align = "center"),
+  br(),
+  br(),
   br(),
   sidebarLayout(
     sidebarPanel(
       selectInput("genreInput", label = h3("Genre"),
                   choices = list("Action", "Accounting", "Adventure", "Animation & Modeling", "Audio Production", "Casual", "Design & Illustration", "Early Access", "Education", "Free to Play", "Indie", "Massively Multiplayer", "Nudity", "Photo Editing", "Racing", "RPG","Simulation", "Sports", "Strategy", "Utilities", "Video Production", "Violent", "Web Publishing"),
                   selected = 1),
-        #This feature allows those using the app to select the genre of video game that they are interested in, and both the plot and the table will update to reflect the average original price of the game for that genre and divide it up into the available languages in that genre. It will also change the overall number of results for that genre. This allows the user to examine specific genres of video games that they are interested in!
       sliderInput("priceInput", "Original Price", 0, 800,
                   value = c(0, 800), pre = "$")
-        #This feature allows those using the app to change the price range of video games, so if they are specifically interested in how many Action games cost between $0 and $50 (for example), they can move the slider to this price range and the table, plot, and number of results will reflect the games within that specified price range. Without this feature, the user would have to count the number of games within their desired price range from the table, so this feature greatly simplifies the experience of my app.
       ),
     mainPanel(
-      plotOutput("steamgame_prices_barplot"),
-      br(),
       textOutput("rows_number"),
+      tags$head(tags$style("#rows_number{font-size: 22px}")),
       br(),
-      tableOutput("data_table")
+    navbarPage("Steam Games",
+              tabPanel("About the App", p("This app allows you to examine the average price of different video game genres published in different languages."),
+                       p("The app is completely interactive. Use the Genre list to pick the genre you're interested in and use the Original Price slider to examine specific price ranges you're curious about."),
+                       br(),
+                       p("The Plot tab in the navigation bar will take you to an interactive bar plot that changes depending on your selected genre and price range."),
+                       p("The Table tab in the navigation bar will take you to an interactive table that will show you more information on each game within your selected genre and price range."),
+                       br(),
+                       p("Start playing with the Genre choices and Original Price slider and watch what happens!"),
+                       br(),
+                       br(),
+                       br(),
+                       p("The data used for this app comes from the steam_games data set in R."),
+                       p("To access the original data, simply load library(datateachr) and steam_games into your R console.")),
+              tabPanel("Plot", plotOutput("steamgame_prices_barplot")),
+              tabPanel("Table", DT::DTOutput("data_table")))
     )
   )
   )
@@ -47,19 +61,20 @@ server <- function(input, output) {
         summarise(mean = mean(original_price)) %>%
       ggplot() +
         geom_bar(aes(x = primary_language, y = mean),
-                 stat = "identity", col = "darkblue", fill = "darkblue") +
+                 stat = "identity", col = "mediumorchid3", fill = "mediumorchid3") +
         ylab("Average Original Price ($)") +
         xlab("Language")
     })
   output$data_table <-
-    renderTable({
-      filtered_data()
+    DT::renderDataTable({
+      DT::datatable(data = filtered_data(),
+      options = list(scrollX = TRUE)
+      )
       })
   output$rows_number <-
     renderText({
         paste("The number of results in this genre and price range is:", nrow(filtered_data()))
     })
-    #This feature allows the user to see how many video games there are within their specified genre and price range. This will update each time they change one or both of the filters, and it is useful for users who are interested in questions like "how many Action games cost less than $50?" There are many genres with thousands of games, so it would be impractical to expect the user to count the number of games from the table.
   }
 
 shinyApp(ui = ui, server = server)
