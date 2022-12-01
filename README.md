@@ -2,7 +2,7 @@
 
 ## Welcome to my shiny app! :sparkles:
 
-I have chosen Option B for Assignment B-3 for STAT545B at UBC and created my own shiny app!
+I have chosen Option C for Assignment B-4 for STAT545B at UBC and implemented additional features and improvements to the shiny app that I created in Assignment B-3. 
 
 This app lets you examine the average original price of different video game genres published in different languages. 
 
