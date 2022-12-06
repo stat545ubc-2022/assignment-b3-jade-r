@@ -6,8 +6,8 @@ library(DT)
 library(shinythemes)
 
 ui <- fluidPage(theme=shinytheme("spacelab"),
-  img(src = "game.png", height = 125, width = 250, align = "left"),
-  img(src = "game.png", height = 125, width = 250, align = "right"),
+  img(src = "game.png", height = 125, width = 245, align = "left"),
+  img(src = "game.png", height = 125, width = 245, align = "right"),
   h1("Steam Games Video Game Data", align = "center"),
   br(),
   br(),
