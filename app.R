@@ -5,7 +5,6 @@ library(datateachr)
 library(DT)
 library(shinythemes)
 
-
 ui <- fluidPage(theme=shinytheme("spacelab"),
   img(src = "game.png", height = 125, width = 250, align = "left"),
   img(src = "game.png", height = 125, width = 250, align = "right"),
@@ -46,6 +45,15 @@ ui <- fluidPage(theme=shinytheme("spacelab"),
 
 
 server <- function(input, output) {
+
+  sg_tidy <- steam_games %>%
+    separate(languages, into = c("primary_language", "secondary_language"), sep = ",") %>%
+    separate(genre, into = c("primary_genre", "secondary_genre"), sep = ",") %>%
+    filter(!is.na(secondary_language)) %>%
+    filter(!is.na(original_price)) %>%
+    filter(!is.na(primary_genre))
+
+  sg_tidiest = subset(sg_tidy, select = c(primary_language, secondary_language, original_price, discount_price, primary_genre))
 
   filtered_data <-
     reactive({sg_tidiest %>%
